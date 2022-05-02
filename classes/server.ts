@@ -4,6 +4,9 @@ import socketIO from "socket.io";
 import http from "http";
 
 import * as eventSocket from './sockets/socket';
+import { UsuarioLista } from "./usuarios-lista";
+
+export const usuariosConectador = new UsuarioLista();
 
 export default class Server {
 private static _instance : Server;
@@ -39,8 +42,11 @@ private escucharSocket(){
 
     this.io.on('connection', cliente => {
         console.log("cliente conectado");
+        eventSocket.conectarCliente(cliente);
+        eventSocket.configurarUsuario(cliente, this.io);
         eventSocket.mensaje(cliente,this.io);
         eventSocket.desconnect(cliente);
+        
     });
 }
 
